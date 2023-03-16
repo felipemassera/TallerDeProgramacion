@@ -1,0 +1,133 @@
+GENERALES
+
+{TRANSFORMO UN NUM EN BINARIO RECURSIVO}
+procedure transformoEnBinario (num:integer);
+var
+    aux:integer;
+begin
+    if (num <> 0) then begin //cuando el num sea igual a 0 es nuestro caso base;
+        aux:=num;
+        num:= num div 2;
+        transformoEnBinario(num);
+        write(aux mod 2);
+    end;
+end;
+
+							{VECTORES}
+
+Procedure busquedaDicotomica (v: vector; ini,fin: indice; dato:integer; var pos: indice); //constante dimF del vector
+begin
+	if (ini<=fin) and (dato <> v[pos]) then begin
+		writeln(pos);
+		if (dato < v[pos]) then
+			fin:=pos-1
+		else ini:=pos+1;
+		pos:=(ini+fin) div 2;
+		busquedaDicotomica(v,ini,fin,dato,pos);
+	end;
+	if (pos > 0) and (pos <= dimF)and(dato = v[pos]) then pos:=pos
+	else pos:=-1;
+end;
+
+procedure sumaTotalArr(arr: vector ; var pos: integer ; var total: integer);
+begin
+	if (pos < dimF) then begin
+		pos:= pos + 1;
+		total:= total + arr[pos];
+		
+		writeln(pos,') ',total);
+		sumaTotalArr(arr, pos, total);
+	end;	
+end;
+
+procedure cargarVector(var v: vector; i: integer);
+begin
+    if (i<=dimf) then begin
+    v[i]:= random(100);
+    cargarVector(v,i+1);
+    end;
+end;
+
+function maximoValorVector(v:vector;indice,dF:integer):integer;  {El DF es la constante pero hay que pasarlo como Paramentro}
+var
+	ant:integer;
+begin
+	if(indice<=dF)then begin
+		ant:=maximoValorVector(v,indice+1,dF);
+		if(v[indice]>ant)then begin // < = minimo \\ > maximo
+			maximoValorVector:=v[indice];
+		end else begin
+			maximoValorVector:=ant;
+		end;
+	end;
+end;
+
+procedure verVector(v: vector; i:integer);
+begin
+for i:=1 to dimf do
+  writeln (i,') ',v[i]);  
+end;
+
+ORDENAMIENTO VECTOR
+
+procedure ordenar (var v:vector);
+var
+	i, j:integer; actual:integer;
+begin
+	for i:= 2 to 100 do begin
+		actual:=v[i];
+		j:=i-1;
+		while (j > 0) and (v[j] > actual) do begin
+			v[j+1]:=v[j];
+			j:=j-1;
+		end;
+		v[j+1]:=actual;
+	end;
+end;
+
+
+						{LISTAS}
+{ BUSCA NÜMERO EN LISTA SI ESTA DEVUELVE OK
+Function buscarNum(l:lista; x: integer): boolean; 
+Begin
+  If (l = Nil) Then
+    buscarNum := false
+  Else
+    buscarNum := ((x = l^.dato) Or (buscarNum (l^.sig, x)));
+  // en este caso evalua la primera condiucion, cuando esta es true,
+
+//corta la ejecucion del bucle y transforma en TRUE las subsiguentes retornos de los llamados recursivos.
+End;
+}
+
+						{ARBOLES}
+procedure crearArbol (var a:arbol; s: socio);
+		begin
+		if (a=nil) then begin
+		new(a);
+		a^.dato:=s ; a^.hi := nil; a^.hd := nil; 
+		end
+		else if (s.nSocio < a^.dato.nSocio)then crearArbol(a^.hi,s)
+		else crearArbol(a^.hd,s);
+		end;
+		
+Function nSocioMAX(a:arbol):integer;
+	begin
+	if (a=nil)then nSocioMAX:= -1 //aca no se encuentra el numero
+	else if (a^.hd=nil) then
+		nSocioMAX:= a^.dato.nSocio
+	else nSocioMAX:=nSocioMAX(a^.hd);	
+	end;
+	
+	Function nSocioMIN(a:arbol):integer;
+	begin
+	if (a=nil)then nSocioMIN:= +9999 //aca no se encuentra el numero
+	else if (a^.hi=nil) then
+		nSocioMIN:=a^.dato.nSocio
+	else nSocioMIN:=nSocioMIN(a^.hi);	
+	end;
+	
+	
+						
+						
+

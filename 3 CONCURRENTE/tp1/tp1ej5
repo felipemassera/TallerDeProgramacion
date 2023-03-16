@@ -1,0 +1,81 @@
+programa tp1Ej5
+procesos
+  proceso dejarP
+  comenzar
+    mientras(HayPapelEnLaBolsa)
+      depositarPapel
+  fin
+  proceso juntarP
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso dejarF
+  comenzar
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+  fin
+  proceso juntarF
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso recorrerCa
+  comenzar
+    repetir 19
+      juntarF
+      mover
+    dejarF
+  fin
+  proceso recorrerAv
+  comenzar
+    repetir 19
+      mover
+      juntarP
+    Pos(PosAv,(PosCa -19))
+    dejarP
+    
+  fin
+areas
+  a1: AreaP(1,80,20,80)
+  a2: AreaP(1,75,20,75)
+  b1: AreaP(75,80,75,99)
+  b2: AreaP(80,80,80,99)
+  c1: AreaP(80,15,99,15)
+  c2: AreaP(80,10,99,10)
+  d1: AreaP(10,1,10,20)
+  d2: AreaP(15,1,15,20)
+robots
+  robot r-Av
+  comenzar
+    recorrerAv
+    Pos((PosAv+5),(PosCa))
+    recorrerAv
+  fin 
+  robot r-Ca
+  comenzar
+    derecha
+    recorrerCa
+    Pos((PosAv -19),(PosCa+5))
+    recorrerCa
+  fin
+
+variables
+  r1:r-Ca
+  r3:r-Ca
+  r2:r-Av
+  r4:r-Av
+comenzar
+  AsignarArea(r1,a1)
+  AsignarArea(r1,a2)
+  AsignarArea(r3,c1)
+  AsignarArea(r3,c2)
+  AsignarArea(r2,b1)
+  AsignarArea(r2,b2)
+  AsignarArea(r4,d1)
+  AsignarArea(r4,d2)
+  Iniciar(r1,1,75)
+  Iniciar(r2,75,80)
+  Iniciar(r3,80,10)
+  Iniciar(r4,10,1)
+fin

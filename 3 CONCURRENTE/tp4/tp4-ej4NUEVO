@@ -1,0 +1,126 @@
+programa ej4tp4
+procesos
+  proceso juntarF
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso juntarP
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso vaciarBolsa
+  comenzar
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+    mientras HayPapelEnLaBolsa
+      depositarPapel
+  fin
+  proceso enviarTarea (ES ok1:boolean;ES ok2:boolean)
+  variables
+    tarea,av,ca,id:numero
+  comenzar
+    si (ok1 & ok2)
+      Random(id,1,2)
+    sino
+      si ok1
+        id:=1
+      sino
+        id:=2
+    Random(tarea,1,4)
+    si id=1
+      EnviarMensaje(tarea,r1)
+      si tarea<>4
+        Random(av,2,100)
+        Random(ca,2,100)
+        EnviarMensaje(av,r1)
+        EnviarMensaje(ca,r1)
+      sino
+        ok1:= F
+    sino
+      EnviarMensaje(tarea,r2)
+      si tarea <> 4
+        Random(av,2,100)
+        Random(ca,2,100)
+        EnviarMensaje(av,r2)
+        EnviarMensaje(ca,r2)
+      sino
+        ok2:= F
+  fin
+  proceso enviarId
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+  fin
+  proceso Tarea(E t:numero)
+  comenzar
+    si t=1
+      juntarF
+    sino
+      si t=2
+        juntarP
+      sino
+        vaciarBolsa
+  fin
+  proceso irEsquina(E av:numero;E ca:numero;E avi:numero;E cai:numero;E tarea:numero)
+  comenzar
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    Tarea(tarea)
+    Pos(avi,cai)
+    LiberarEsquina(av,ca)
+  fin
+areas
+  a1:AreaP(2,1,2,1)
+  a2:AreaP(3,1,3,1)
+  aj:AreaP(1,1,1,1)
+  ac: AreaPC(2,2,100,100)
+robots
+  robot jefe
+  variables
+    ok1,ok2,Fin:boolean
+    cont:numero
+  comenzar
+    ok1:= V
+    ok2:= V
+    cont:=0
+    enviarId
+    mientras((ok1 | ok2)&(cont<10)) 
+      cont:=cont+1
+      enviarTarea(ok1,ok2)
+      RecibirMensaje(Fin,*) {Entendido}
+    si (ok1)
+      EnviarMensaje(4,r1)
+    si ok2
+      EnviarMensaje(4,r2)
+  fin
+  robot recolector
+  variables
+    id,av,ca,avi,cai,tarea:numero
+  comenzar
+    RecibirMensaje(id,rj)
+    avi:= PosAv
+    cai:=PosCa
+    RecibirMensaje(tarea,rj)
+    mientras tarea <>4
+      RecibirMensaje(av,rj)
+      RecibirMensaje(ca,rj)
+      irEsquina(av,ca,avi,cai,tarea)
+      EnviarMensaje(V,rj)
+      RecibirMensaje(tarea,rj)
+    EnviarMensaje(V,rj)
+  fin
+variables
+  r1,r2:recolector
+  rj:jefe
+comenzar
+  AsignarArea(r1,a1)
+  AsignarArea(r1,ac)
+  AsignarArea(r2,a2)
+  AsignarArea(r2,ac)
+  AsignarArea(rj,aj)
+  Iniciar(rj,1,1)
+  Iniciar(r1,2,1)
+  Iniciar(r2,3,1)
+fin

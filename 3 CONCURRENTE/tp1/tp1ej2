@@ -1,0 +1,70 @@
+programa tp1Ej2
+procesos
+  proceso girar(E cant:numero)
+  comenzar
+    repetir cant
+      derecha
+  fin
+  proceso juntarP(ES p:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso lado(ES p:numero)
+  comenzar
+    repetir 19
+      juntarP(p)
+      mover
+    juntarP(p)
+    Informar(p)
+  fin
+  
+areas
+  der: AreaP(10,10,10,29)
+  sup: AreaP(10,30,29,30)
+  izq: AreaP(30,11,30,30)
+  inf: AreaP(11,10,30,10)
+robots
+  robot r1
+  variables
+    p:numero
+  comenzar
+    lado(p)
+  fin
+  robot r2
+  variables
+    p:numero
+  comenzar
+    derecha
+    lado(p)
+  fin
+  robot r3
+  variables
+    p:numero
+  comenzar
+    girar(2)
+    lado(p) 
+  fin
+  robot r4
+  variables
+    p:numero
+  comenzar
+    girar(3)
+    lado(p)
+  fin
+variables
+  ro1: r1 
+  ro2: r2
+  ro3: r3
+  ro4: r4
+comenzar
+  AsignarArea(ro1,der)
+  AsignarArea(ro2,sup)
+  AsignarArea(ro3,izq)
+  AsignarArea(ro4,inf)
+  Iniciar(ro1,10,10)
+  Iniciar(ro2,10,30)
+  Iniciar(ro3,30,30)
+  Iniciar(ro4,30,10)
+fin

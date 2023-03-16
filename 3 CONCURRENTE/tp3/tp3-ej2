@@ -1,0 +1,151 @@
+programa tp3_ej2
+procesos
+  proceso Izq comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarF
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso AltoF(E cant:numero)
+  comenzar
+    juntarF
+    repetir cant
+      mover
+    juntarF    
+  fin
+  proceso lado(E cant:numero)
+  comenzar
+    repetir cant
+      mover
+  fin
+  proceso recorridoI 
+  variables
+    cant:numero
+  comenzar
+    cant:=5
+    repetir 4
+      AltoF(cant)
+      derecha
+      lado(cant)
+      Izq
+      cant:=(cant -1)
+  fin
+  proceso vueltaI
+  variables
+    cant:numero
+  comenzar
+    cant:=2
+    repetir 4
+      lado(cant)
+      derecha
+      AltoF(cant)
+      Izq
+      cant:= cant+1
+  fin
+  proceso centroI
+  comenzar
+    mover
+    juntarF
+    derecha
+    BloquearEsquina(PosAv+1,PosCa)
+    mover
+    juntarF
+    EnviarMensaje(1,rj)
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(PosAv +1, PosCa)
+  fin
+
+  proceso juntarP
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso AltoP(E cant:numero)
+  comenzar
+    juntarP
+    repetir cant
+      mover
+    juntarP    
+  fin
+
+  proceso recorridoD 
+  variables
+    cant:numero
+  comenzar
+    cant:=5
+    repetir 4
+      AltoP(cant)
+      Izq
+      lado(cant)
+      derecha
+      cant:=(cant -1)
+  fin
+  proceso vueltaD
+  variables
+    cant:numero
+  comenzar
+    cant:=2
+    repetir 4
+      lado(cant)
+      Izq
+      AltoP(cant)
+      derecha
+      cant:= cant+1
+  fin
+  proceso centroD
+  comenzar
+    mover
+    juntarP
+    Izq
+    BloquearEsquina(PosAv -1,PosCa)
+    mover
+    juntarP
+    EnviarMensaje(2,rj)
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(PosAv -1, PosCa)
+  fin
+
+areas
+  area: AreaC (1,1,31,31)
+robots
+  robot rI
+  comenzar
+    recorridoI
+    centroI
+    vueltaI
+  fin
+  robot rD
+  comenzar
+    recorridoD
+    centroD
+    vueltaD
+  fin
+
+  robot jefe
+  variables
+    quien:numero
+  comenzar
+    RecibirMensaje(quien,*)
+    Informar('LLego_primero_el_robot',quien)
+    RecibirMensaje(quien,*)
+  fin
+variables
+  r1: rI
+  r2: rD
+  rj: jefe
+comenzar
+  AsignarArea(r1,area)
+  AsignarArea(r2,area)
+  AsignarArea(rj,area)
+  Iniciar(r1,1,1)
+  Iniciar(r2,31,1)
+  Iniciar(rj,15,1)
+fin
+

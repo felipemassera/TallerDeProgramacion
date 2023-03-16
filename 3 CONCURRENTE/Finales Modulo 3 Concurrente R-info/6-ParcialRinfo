@@ -1,0 +1,162 @@
+programa cuatrocuadrados
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarP(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:=p+1
+  fin
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso juntarFP(ES f:numero;ES p:numero)
+  comenzar
+    juntarF(f)
+    juntarP(p)
+  fin
+  proceso ladoLargoV(ES f:numero;ES p:numero)
+  comenzar
+    juntarFP(f,p)
+    repetir 4
+      BloquearEsquina(PosAv,PosCa +1)
+      mover
+      juntarFP(f,p)
+      mover
+      LiberarEsquina(PosAv,PosCa -1)
+      juntarFP(f,p)
+  fin
+  proceso ladoLargoH(ES f:numero;ES p:numero)
+  comenzar
+    juntarFP(f,p)
+    repetir 4
+      BloquearEsquina(PosAv +1,PosCa)
+      mover
+      juntarFP(f,p)
+      mover
+      LiberarEsquina(PosAv -1,PosCa)
+      juntarFP(f,p)
+  fin
+  proceso ladoCorto(ES f:numero;ES p:numero)
+  comenzar
+    repetir 2
+      juntarFP(f,p)
+      mover
+  fin
+  proceso enviarId
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(1,r2)
+    EnviarMensaje(6,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(2,r3)
+    EnviarMensaje(1,r3)    
+    EnviarMensaje(4,r4)
+    EnviarMensaje(6,r4)
+    EnviarMensaje(1,r4)
+  fin
+areas
+  ac: AreaPC(1,1,9,9)
+  ai: AreaPC(20,1,20,5)
+  aj: AreaP(20,15,20,15)
+robots
+  robot corto
+  variables
+    id,f,p,av,ca: numero
+  comenzar
+    f:=0
+    p:=0
+    RecibirMensaje(id,rj)
+    RecibirMensaje(av,rj)
+    RecibirMensaje(ca,rj)
+    Pos(av,ca)
+    ladoCorto(f,p)
+    derecha
+    ladoLargoH(f,p)
+    Pos(1,PosCa -2)
+    ladoLargoH(f,p)
+    izquierda
+    ladoCorto(f,p)
+    EnviarMensaje(id,rj)
+    EnviarMensaje(f,rj)
+    EnviarMensaje(p,rj)
+  fin
+  robot largo
+  variables
+    id, f,p,av,ca:numero
+  comenzar
+    f:=0
+    p:=0
+    RecibirMensaje(id,rj)
+    RecibirMensaje(av,rj)
+    RecibirMensaje(ca,rj)
+    Pos(av,ca)
+    ladoLargoV(f,p)
+    derecha
+    ladoCorto(f,p)
+    Pos(PosAv -2,1)
+    ladoCorto(f,p)
+    izquierda
+    ladoLargoV(f,p)
+    EnviarMensaje(id,rj)
+    EnviarMensaje(f,rj)
+    EnviarMensaje(p,rj)
+  fin
+  robot jefe
+  variables
+    id,f,p,totF,totP:numero
+  comenzar
+    totF:=0
+    totP:=0
+    enviarId
+    repetir 4
+      RecibirMensaje(id,*)
+      si id=1
+        RecibirMensaje(f,r1)
+        RecibirMensaje(p,r1)
+      sino
+        si id=2
+          RecibirMensaje(f,r2)
+          RecibirMensaje(p,r2)
+        sino
+          si id=3
+            RecibirMensaje(f,r3)
+            RecibirMensaje(p,r3)
+          sino
+            RecibirMensaje(f,r4)
+            RecibirMensaje(p,r4)
+      totF:= f+totF
+      totP:= p+totP
+    Informar('CantFlores',totF)
+    Informar('CantPapeles',totP)
+  fin
+variables
+  r1,r2: corto
+  r3,r4:largo
+  rj:jefe
+comenzar
+  AsignarArea(r1,ac)
+  AsignarArea(r2,ac)
+  AsignarArea(r3,ac)  
+  AsignarArea(r4,ac)
+  AsignarArea(rj,aj)
+  AsignarArea(r1,ai)
+  AsignarArea(r2,ai)
+  AsignarArea(r3,ai)  
+  AsignarArea(r4,ai)
+  Iniciar(r1,20,1)
+  Iniciar(r2,20,2)
+  Iniciar(r3,20,4)
+  Iniciar(r4,20,5)
+  Iniciar(rj,20,15)  
+fin

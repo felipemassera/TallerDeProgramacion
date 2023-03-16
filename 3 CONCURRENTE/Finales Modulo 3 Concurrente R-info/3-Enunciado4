@@ -1,0 +1,120 @@
+programa enunciado4
+procesos
+  proceso juntarP(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:=p+1
+  fin
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso esquina(ES f:numero;ES p:numero)
+  comenzar
+    juntarF(f)
+    juntarP(p)
+  fin
+  proceso depositar(ES f:numero; ES p:numero;E av:numero;E ca:numero;E id:numero)
+  comenzar
+    EnviarMensaje(id,rj)
+    EnviarMensaje(f,rj)
+    EnviarMensaje(p,rj)
+    mientras f>0
+      BloquearEsquina(21,41)
+      Pos(21,41)
+      depositarFlor
+      f:=f -1
+      Pos(av,ca)
+      LiberarEsquina(21,41)
+    mientras p>0
+      BloquearEsquina(22,42)
+      Pos(22,42)
+      depositarPapel
+      p:=p -1
+      Pos(av,ca)
+      LiberarEsquina(22,42)
+  fin
+  proceso enviarId
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+  fin
+  proceso recorrido(ES f:numero;ES p:numero;E cant:numero)
+  comenzar
+    repetir cant
+      esquina(f,p)
+      mover
+  fin
+areas
+  a1:AreaP(1,1,25,25)
+  a2:AreaP(26,26,50,50)
+  aj:AreaP(100,100,100,100)
+  ad:AreaPC(21,41,22,42)
+robots
+  robot recolector
+  variables
+    id,p,f,av,ca:numero
+  comenzar
+    RecibirMensaje(id,rj)
+    repetir 4
+      recorrido(f,p,24)
+      derecha
+      av:=PosAv
+      ca:=PosCa
+      depositar(f,p,av,ca,id)
+
+  fin  
+  robot jefe
+  variables
+    f1,f2,p1,p2,id,f,p:numero
+    ok:boolean
+  comenzar
+    f1:=0
+    p1:=0
+    f2:=0
+    p2:=0
+    enviarId
+    repetir 8
+      RecibirMensaje(id,*)
+      si id=1
+        RecibirMensaje(f,r1)
+        f1:= f1 + f
+        RecibirMensaje(p,r1)
+        p1:= p1 + p
+      sino
+        RecibirMensaje(f,r2)
+        f2:= f2 + f
+        RecibirMensaje(p,r2)
+        p2:= p2 + p
+    si p1> p2
+      Informar('Ganador-Robot-Papeles',1)
+    sino
+      si p2>p1
+        Informar('Ganador-Robot-Papeles',2)
+      sino
+        Informar('EMPATE-PAPELES',3)
+    si f1> f2
+      Informar('Ganador-Robot-Flores',1)
+    sino
+      si f2>f1
+        Informar('Ganador-Robot-Flores',2)
+      sino
+        Informar('EMPATE-Flores',3)
+  fin
+variables
+  r1,r2: recolector
+  rj: jefe
+comenzar
+  AsignarArea(r1,a1)
+  AsignarArea(r2,a2)
+  AsignarArea(r1,ad)
+  AsignarArea(r2,ad)
+  AsignarArea(rj,aj)
+  Iniciar(r1,1,1)
+  Iniciar(r2,26,26)
+  Iniciar(rj,100,100)
+fin
+

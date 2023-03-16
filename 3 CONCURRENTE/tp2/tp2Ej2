@@ -1,0 +1,91 @@
+programa tp2ej2
+procesos
+  proceso juntarF (ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina 
+      tomarFlor
+      f:=f+1
+  fin
+  proceso juntarP(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:=p+1
+  fin
+  proceso esquina(ES f:numero;ES p:numero)
+  comenzar
+    juntarP(p)
+    juntarF(f)
+  fin
+  proceso comparar(E f:numero; E p: numero; ES cant:numero)
+  comenzar
+    si f>p
+      cant:= cant+1
+  fin
+  proceso izq
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso ele(ES cant:numero)
+  variables
+    f,p,alto:numero
+  comenzar
+    f:=0
+    p:=0
+    Random(alto,1,5)
+    repetir alto
+      esquina(f,p)
+      mover
+    esquina(f,p)  
+    derecha
+    mover
+    esquina(f,p)
+    izq
+    comparar(f,p,cant)
+  fin
+  proceso escalon(ES cant:numero)
+  comenzar
+    repetir 4
+      ele(cant)
+  fin
+areas
+  Ajefe: AreaP(1,1,1,1)
+  Area1: AreaP(2,1,6,20)
+  Area2: AreaP(7,1,11,20)
+  Area3: AreaP(12,1,16,20)
+robots
+  robot tipo
+  variables
+    cant,soy:numero
+  comenzar
+    cant:=0
+    escalon(cant)
+    EnviarMensaje(cant,j)
+  fin
+  robot jefe
+  variables
+    cant,tot:numero
+  comenzar
+    tot:=0
+    cant:=0
+    repetir 3
+      RecibirMensaje(cant,*)
+      tot:=tot+cant
+    Informar('Total_Escalones',tot)
+  fin
+variables
+  r1: tipo
+  r2: tipo
+  r3: tipo
+  j: jefe
+comenzar
+  AsignarArea(r1,Area1)
+  AsignarArea(r2,Area2)
+  AsignarArea(r3,Area3)
+  AsignarArea(j,Ajefe)
+  Iniciar(r1,2,1)
+  Iniciar(r2,7,1)
+  Iniciar(r3,12,1)
+  Iniciar(j,1,1)
+fin

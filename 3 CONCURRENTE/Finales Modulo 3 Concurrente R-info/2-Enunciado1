@@ -1,0 +1,119 @@
+programa enunciado1
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso juntarP (ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:=p+1
+  fin
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso enviarId
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+  fin
+  proceso maximo(E id:numero; E cant:numero;ES idMax:numero;ES cantMax:numero)
+  comenzar
+    si cant>cantMax
+      cantMax:= cant
+      id:= idMax
+  fin
+  proceso lado1(ES cant:numero;E pasos:numero)
+  comenzar
+    repetir pasos
+      juntarF(cant)
+      mover
+    derecha
+  fin
+  proceso lado2(ES cant:numero;E pasos:numero)
+  comenzar
+    repetir pasos
+      juntarP(cant)
+      mover
+    derecha
+  fin
+areas
+  ac: AreaPC(15,15,25,25)
+  a1: AreaP  (2,2,2,2)
+  a2: AreaP  (3,3,3,3)
+  aj: AreaP (1,1,1,1)
+robots
+  robot florero
+  variables
+    cant,id,ok:numero
+  comenzar
+    ok:=1
+    cant:=0
+    RecibirMensaje(id,rj)
+    derecha
+    Pos(15,25)
+    repetir 3
+      lado1(cant,10)
+      EnviarMensaje(id,rj)
+      RecibirMensaje(ok,rj)
+    lado1(cant,10)
+    EnviarMensaje(id,rj)
+    EnviarMensaje(cant,rj)
+  fin
+  robot papelero
+  variables
+    cant,id,ok:numero
+  comenzar
+    ok:=1
+    cant:=0
+    RecibirMensaje(id,rj)
+    izquierda
+    Pos(25,15)
+    repetir 3
+      lado2(cant,10)
+      EnviarMensaje(id,rj)
+      RecibirMensaje(ok,rj)
+    lado2(cant,10)
+    EnviarMensaje(id,rj)
+    EnviarMensaje(cant,rj)
+  fin
+  robot coordinador
+  variables
+    id,idMax,cant,cantMax:numero
+  comenzar
+    enviarId
+    cantMax:=-1
+    idMax:=0
+    repetir 3
+      RecibirMensaje(id,r1)
+      RecibirMensaje(id,r2)
+      EnviarMensaje(1,r1)
+      EnviarMensaje(2,r2)
+    repetir 2
+      RecibirMensaje(id,*)
+      si id=1
+        RecibirMensaje(cant,r1)
+      sino
+        RecibirMensaje(cant,r2)
+      maximo(id,cant,idMax,cantMax)
+    Informar('Ganador-Robot',idMax,cantMax)
+  fin
+variables
+  r1:florero
+  r2:papelero
+  rj:coordinador
+comenzar
+  AsignarArea(r1,a1)
+  AsignarArea(r2,a2)
+  AsignarArea(rj,aj)
+  AsignarArea(r1,ac)
+  AsignarArea(r2,ac)
+  Iniciar(rj,1,1)
+  Iniciar(r1,2,2)
+  Iniciar(r2,3,3)
+fin

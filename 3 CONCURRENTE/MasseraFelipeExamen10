@@ -1,0 +1,145 @@
+programa MasseraFelipe
+procesos
+  proceso esquina(ES p:numero)
+  comenzar
+    si HayPapelEnLaEsquina
+      tomarPapel
+      p:= p+1
+    si HayFlorEnLaBolsa
+      depositarFlor
+  fin
+  proceso juntarP(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:=p +1
+  fin
+  proceso etapa(E id:numero;ES p:numero)
+  comenzar
+    repetir 10
+      esquina(p)
+      mover
+    si id=1
+      EnviarMensaje(1,r2)
+      EnviarMensaje(1,r3)
+    sino
+      si id=2
+        EnviarMensaje(1,r1)
+        EnviarMensaje(1,r3)
+      sino
+        EnviarMensaje(1,r1) 
+        EnviarMensaje(1,r2)
+  fin
+  proceso etapaF(E id:numero;ES p:numero)
+  comenzar
+    repetir 9
+      esquina(p)
+      mover
+    si id=1
+      EnviarMensaje(1,r2)
+      EnviarMensaje(1,r3)
+    sino
+      si id=2
+        EnviarMensaje(1,r1)
+        EnviarMensaje(1,r3)
+      sino
+        EnviarMensaje(1,r1) 
+        EnviarMensaje(1,r2)
+  fin
+
+  proceso enviarId
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  proceso juntarTodo(ES p:numero;E avi:numero;E cai:numero)
+  comenzar
+    Pos(80,80)
+    juntarP(p)
+    Pos(avi,cai)
+  fin
+  proceso ultimaEsquina(E p:numero;E avi:numero;E cai:numero)
+  comenzar
+    repetir p
+      BloquearEsquina(80,80)
+      Pos(80,80)
+      depositarPapel
+      Pos(avi,cai)
+      LiberarEsquina(80,80)
+  fin
+areas
+  a1:AreaP(1,1,1,100)
+  a2:AreaP(2,1,2,100)
+  a3:AreaP(3,1,3,100)
+  depo:AreaC(80,80,80,80)
+  aj:AreaP(4,1,4,1)
+robots
+  robot recolector
+  variables
+    p,id,seguir,avi,cai:numero
+  comenzar
+    RecibirMensaje(id,rj)
+    avi:= PosAv
+    cai:= PosCa
+    p:= 0
+    repetir 9
+      etapa(id,p)
+      si id= 1
+        RecibirMensaje(seguir,r2)
+        RecibirMensaje(seguir,r3)
+      sino
+        si id= 2
+          RecibirMensaje(seguir,r1)
+          RecibirMensaje(seguir,r3)
+        sino
+          si id=3
+            RecibirMensaje(seguir,r1)
+            RecibirMensaje(seguir,r2)
+    etapaF(id,p)
+    si id= 1
+      RecibirMensaje(seguir,r2)
+      RecibirMensaje(seguir,r3)
+    sino
+      si id= 2
+        RecibirMensaje(seguir,r1)
+        RecibirMensaje(seguir,r3)
+      sino
+        si id=3
+          RecibirMensaje(seguir,r1)
+          RecibirMensaje(seguir,r2)
+    esquina(p)  {proceso ultima calle}
+    ultimaEsquina(p,avi,cai)
+    EnviarMensaje(1,rj)
+  fin
+  robot jefe
+  variables
+    id,p,avi,cai,seguir:numero
+  comenzar
+    p:= 0
+    enviarId
+    avi:= PosAv
+    cai:= PosCa
+    RecibirMensaje(seguir,r1)
+    RecibirMensaje(seguir,r2)
+    RecibirMensaje(seguir,r3)
+    juntarTodo(p,avi,cai)
+    Informar('PapelesJuntados-',p)
+  fin 
+variables
+  r1,r2,r3:recolector
+  rj:jefe
+comenzar
+  AsignarArea(r1,a1)
+  AsignarArea(r2,a2)
+  AsignarArea(r3,a3)
+  AsignarArea(rj,aj)
+  AsignarArea(r1,depo)
+  AsignarArea(r2,depo)
+  AsignarArea(r3,depo)
+  AsignarArea(rj,depo)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,1)
+  Iniciar(r3,3,1)
+  Iniciar(rj,4,1)
+fin

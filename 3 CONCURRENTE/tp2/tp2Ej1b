@@ -1,0 +1,62 @@
+programa tp2ej1
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso avenida(ES f:numero)
+  comenzar
+    repetir 9
+      juntarF(f)
+      mover
+    juntarF(f)
+  fin
+areas
+  area1: AreaP(1,1,1,10)
+  area2: AreaP(2,11,2,20)
+  area3: AreaP(2,1,2,1)
+robots
+  robot tipo1
+  variables
+    f,SoyNum:numero
+  comenzar
+    f:=0
+    RecibirMensaje(SoyNum,robot3)
+    avenida(f)
+    EnviarMensaje(SoyNum,robot3)
+    EnviarMensaje(f,robot3)
+  fin
+  robot tipo3
+  variables
+    f1,f2,primero:numero
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    repetir 2
+      RecibirMensaje(primero,*)
+      si (primero=1)
+        RecibirMensaje(f1,robot1)     
+      sino
+        RecibirMensaje(f2,robot2)
+    si (f1>f2)
+      Informar('Robot',1,(f1 -f2))
+    sino
+      si(f2>f1)
+        Informar('Robot',2,(f2 -f1))
+      sino
+        Informar('EMPATE_en',f1)
+  fin
+variables
+  robot1: tipo1
+  robot2: tipo1
+  robot3: tipo3
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot3,area3)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,11)
+  Iniciar(robot3,2,1)
+fin

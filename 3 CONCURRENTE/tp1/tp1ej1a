@@ -1,0 +1,56 @@
+programa tp1ej1a
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso esquina(ES f:numero ; ES c:numero)
+  comenzar
+    si(HayFlorEnLaEsquina)
+      juntarF(f)
+    sino
+      c:=c+1
+  fin
+  proceso dejarF
+  comenzar
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+  fin
+  proceso avenida(ES f:numero; ES c:numero)
+  comenzar
+    repetir 99
+      esquina(f,c)
+      mover
+    esquina(f,c)
+    dejarF
+    Informar(f,c)
+  fin
+areas
+  area1: AreaP(1,1,1,100)
+  area2: AreaP(3,1,3,100)
+  area3: AreaP(5,1,5,100)
+
+robots
+  robot rinfo
+  variables
+    f,c,i:numero
+  comenzar
+    i:=1
+    repetir 2
+      f:=0
+      c:=0
+      avenida(f,c)
+      i:=i+2
+      Pos(i,1)
+    avenida(f,c)
+  fin
+variables
+  r1: rinfo
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r1,area2)
+  AsignarArea(r1,area3)
+  Iniciar(r1,1,1)
+fin

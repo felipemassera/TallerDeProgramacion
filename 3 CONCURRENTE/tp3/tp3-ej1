@@ -1,0 +1,102 @@
+programa tp3-pdfclase1
+procesos
+  proceso juntarF comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso juntarP comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso moverRandomF(E Avo:numero;E Cao:numero)
+  variables
+    Av,Ca:numero
+  comenzar
+    Random(Av,1,5)
+    Random(Ca,1,10)
+    BloquearEsquina(Av,Ca)
+    Pos(Av,Ca)
+    juntarF
+    Pos(Avo,Cao)
+    LiberarEsquina(Av,Ca)
+  fin
+  proceso moverRandomP(E Avo:numero;E Cao:numero)
+  variables
+    Av,Ca:numero
+  comenzar
+    Random(Av,6,10)
+    Random(Ca,1,9)
+    BloquearEsquina(Av,Ca)
+    Pos(Av,Ca)
+    juntarP
+    Pos(Avo,Cao)
+    LiberarEsquina(Av,Ca)
+  fin
+  proceso DejarFFin(E Avo:numero;E Cao:numero)
+  comenzar
+    mientras HayFlorEnLaBolsa
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarFlor
+      Pos(Avo,Cao)
+      LiberarEsquina(10,10)
+  fin
+  proceso DejarPFin(E Avo:numero;E Cao:numero)
+  comenzar
+    mientras HayPapelEnLaBolsa
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarPapel
+      Pos(Avo,Cao)
+      LiberarEsquina(10,10)
+  fin
+areas
+  areaP: AreaPC(6,1,10,9)
+  areaF: AreaPC(1,1,5,10)
+  partida: AreaC(6,10,9,10)
+  areaC: AreaC(10,10,10,10)
+robots
+  robot floreros
+  variables
+    Avo,Cao:numero
+  comenzar
+    Cao:=PosCa
+    Avo:=PosAv
+    repetir 5
+      moverRandomF(Avo,Cao)
+    DejarFFin(Avo,Cao)
+  fin
+  robot papeleros
+  variables
+    Avo,Cao:numero
+  comenzar
+    Cao:=PosCa
+    Avo:=PosAv
+    repetir 3
+      moverRandomP(Avo,Cao)
+    DejarPFin(Avo,Cao)
+  fin
+variables
+  r1,r2: floreros
+  r3,r4: papeleros
+comenzar
+  AsignarArea(r1,areaF)
+  AsignarArea(r2,areaF)
+  AsignarArea(r3,areaP)
+  AsignarArea(r4,areaP)
+  AsignarArea(r1,areaC)
+  AsignarArea(r2,areaC)
+  AsignarArea(r3,areaC)
+  AsignarArea(r4,areaC)
+  AsignarArea(r1,partida)
+  AsignarArea(r2,partida)
+  AsignarArea(r3,partida)
+  AsignarArea(r4,partida)
+  Iniciar(r1,6,10)
+  Iniciar(r2,7,10)
+  Iniciar(r3,8,10)
+  Iniciar(r4,9,10)
+fin
+
+
+

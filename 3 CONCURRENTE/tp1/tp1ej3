@@ -1,0 +1,82 @@
+programa tp1Ej3
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso compara(E p:numero;E f:numero; ES total:numero)
+  comenzar
+    si(p = (f+1))
+      total:= total+1
+  fin
+  proceso juntarP(ES p:numero)
+  comenzar
+    si(HayPapelEnLaEsquina)
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        p:=p+1
+      mientras(HayPapelEnLaBolsa)
+        depositarPapel
+  fin
+  proceso juntarF(ES f:numero)
+  comenzar
+    si(HayFlorEnLaEsquina)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        f:=f+1
+      mientras(HayFlorEnLaBolsa)
+        depositarFlor
+  fin
+  proceso lado(E c:numero;ES f:numero;ES p:numero)
+  comenzar
+    repetir c
+      juntarF(f)
+      juntarP(p)
+      mover
+  fin
+  proceso ele(E c:numero;ES tot:numero)
+  variables
+    f,p:numero
+  comenzar
+    f:=0
+    p:=0
+    lado(c,f,p)
+    derecha
+    lado(c,f,p)
+    juntarF(f)
+    juntarP(p)
+    compara(p,f,tot)
+  fin        
+  proceso escalera
+  variables
+    cant,tot:numero
+  comenzar
+    cant:=1
+    tot:=0
+    repetir 4
+      ele(cant,tot)
+      izquierda
+      cant:=cant+1
+    Informar(tot)
+  fin
+  
+areas
+  ciudad: AreaC(12,6,32,24)
+robots
+  robot r1
+  comenzar
+    escalera
+  fin
+variables
+  robot1: r1
+  robot2: r1
+  robot3: r1
+comenzar
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,ciudad)
+  Iniciar(robot1,12,14)
+  Iniciar(robot2,17,10)
+  Iniciar(robot3,22,6)
+fin

@@ -1,0 +1,99 @@
+programa tp2ej3
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso juntarP(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:=p+1
+  fin
+  proceso calleA(ES p:numero)
+  comenzar
+    repetir 9
+      juntarP(p)
+      mover
+    juntarP(p)
+  fin
+  proceso calleB(ES f:numero)
+  comenzar
+    repetir 9
+      juntarF(f)
+      mover
+    juntarF(f)
+  fin
+areas
+  av1: AreaPC(1,1,40,1)
+  av2: AreaPC(1,5,40,5)
+robots
+  robot grupoA2
+  variables
+    p:numero
+  comenzar
+    derecha
+    RecibirMensaje(p,A1)
+    calleA(p)
+    Pos(PosAv+11,PosCa)
+    EnviarMensaje(p,A1)
+    RecibirMensaje(p,A1)
+    calleA(p)
+    Informar('CantPapeles',p)
+  fin
+  robot grupoA1
+  variables
+    p:numero
+  comenzar
+    derecha
+    p:=0
+    calleA(p)
+    Pos(PosAv+11,PosCa)
+    EnviarMensaje(p,A2)
+    RecibirMensaje(p,A2)
+    calleA(p)
+    EnviarMensaje(p,A2)
+  fin
+  robot grupoB2
+  variables
+    f:numero
+  comenzar
+    derecha
+    RecibirMensaje(f,B1)
+    calleB(f)
+    Pos(PosAv+11,PosCa)
+    EnviarMensaje(f,B1)
+    RecibirMensaje(f,B1)
+    calleB(f)
+    Informar('CantFlores',f)
+  fin
+  robot grupoB1
+  variables
+    f:numero
+  comenzar
+    derecha
+    f:=0
+    calleB(f)
+    Pos(PosAv+11,PosCa)
+    EnviarMensaje(f,B2)
+    RecibirMensaje(f,B2)
+    calleB(f)
+    EnviarMensaje(f,B2)
+  fin
+variables
+  A1: grupoA1
+  A2: grupoA2
+  B1: grupoB1
+  B2: grupoB2
+comenzar
+  AsignarArea(A1,av1)
+  AsignarArea(A2,av1)
+  AsignarArea(B1,av2)
+  AsignarArea(B2,av2)
+  Iniciar(A1,1,1)
+  Iniciar(A2,11,1)
+  Iniciar(B1,1,5)
+  Iniciar(B2,11,5)
+fin

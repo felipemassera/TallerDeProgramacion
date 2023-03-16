@@ -1,0 +1,96 @@
+programa tp2ej1
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso avenida(ES f:numero)
+  comenzar
+    repetir 9
+      juntarF(f)
+      mover
+    juntarF(f)
+  fin
+  proceso MAXIMO(E f:numero;E num:numero; ES fMax:numero; ES numMax:numero)
+  comenzar
+    si f>fMax
+      numMax:= num
+      fMax:= f  
+  fin
+areas
+  area1: AreaP(1,1,1,10)
+  area2: AreaP(2,11,2,20)
+  area3: AreaP(3,21,3,30)
+  area4: AreaP(4,31,4,40)
+  area5: AreaP(5,41,5,50)
+  area6: AreaP(6,51,6,60)
+  area7: AreaP(2,1,2,1)
+robots
+  robot tipo1
+  variables
+    f,SoyNum:numero
+  comenzar
+    f:=0
+    RecibirMensaje(SoyNum,robot7)
+    avenida(f)
+    EnviarMensaje(SoyNum,robot7)
+    EnviarMensaje(f,robot7)
+  fin
+  robot tipo3
+  variables
+    f,fMax,ID,IDMax:numero
+  comenzar
+    fMax:=-1
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    EnviarMensaje(4,robot4)
+    EnviarMensaje(5,robot5)
+    EnviarMensaje(6,robot6)
+    repetir 6
+      RecibirMensaje(ID,*)
+      si ID=1
+        RecibirMensaje(f,robot1)
+      sino
+        si ID=2
+          RecibirMensaje(f,robot2)
+        sino
+          si ID=3
+            RecibirMensaje(f,robot3)
+          sino
+            si ID=4
+              RecibirMensaje(f,robot4)
+            sino
+              si ID=5
+                RecibirMensaje(f,robot5)
+              sino
+                RecibirMensaje(f,robot6)
+      MAXIMO(f,ID,fMax,IDMax)     
+    Informar('Robot',IDMax,fMax)
+  fin
+variables
+  robot1: tipo1
+  robot2: tipo1
+  robot3: tipo1
+  robot4: tipo1
+  robot5: tipo1
+  robot6: tipo1
+  robot7: tipo3
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot4,area4)
+  AsignarArea(robot5,area5)
+  AsignarArea(robot6,area6)
+  AsignarArea(robot7,area7)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,11)
+  Iniciar(robot3,3,21)
+  Iniciar(robot4,4,31)
+  Iniciar(robot5,5,41)
+  Iniciar(robot6,6,51)
+  Iniciar(robot7,2,1)
+fin

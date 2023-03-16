@@ -1,0 +1,129 @@
+programa tp4-ej1
+procesos
+  proceso volver  {ok}
+  comenzar
+    repetir 2
+      derecha
+    mover
+    repetir 2
+      derecha
+  fin
+  proceso avanzar(ES f:numero; ES ca:numero) {ok}
+  comenzar
+    mientras ((PosCa<100)&(f>0))
+      depositarFlor
+      mover
+      f:=f -1
+      ca:=ca+1
+  fin
+  proceso juntarF(ES f:numero) {ok}
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso listo(E id:numero) {ok}
+  comenzar
+    Pos(100,100)
+    si id=1
+      EnviarMensaje(V,r1)
+    sino
+      si id=2
+        EnviarMensaje(V,r2)
+      sino
+        EnviarMensaje(V,r3)  
+  fin
+  proceso depositame(E id:numero; E av:numero;E ca:numero) {ok}
+  variables
+    cant:numero
+  comenzar
+    Random(cant,1,4)
+    EnviarMensaje(id,rs)
+    EnviarMensaje(cant,rs)
+    EnviarMensaje(av,rs)
+    EnviarMensaje((ca+1),rs)
+  fin
+  proceso enviarId {OK}
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+areas {OK}
+  a1: AreaPC(1,1,1,100)
+  a2: AreaPC(2,1,2,100)
+  a3: AreaPC(3,1,3,100)  
+  as: AreaP(100,100,100,100)
+
+robots
+  robot cliente
+  variables
+    ok:boolean
+    f,id,ca,av: numero
+  comenzar
+    ca:=1
+    av:=PosAv
+    RecibirMensaje(id,rs)
+    mientras PosCa<100
+      ok:=F
+      depositame(id,av,ca)
+      RecibirMensaje(ok,rs)
+      mover
+      juntarF(f)
+      volver
+      avanzar(f,ca)
+    si HayFlorEnLaBolsa
+      depositarFlor
+    EnviarMensaje(0,rs)
+  fin
+  robot servidor
+  variables
+    finalizados,av,ca,cant,id:numero
+  comenzar
+    finalizados:=0
+    enviarId
+    mientras finalizados<3
+      RecibirMensaje(id,*)
+      si (id=1)
+        RecibirMensaje(cant,r1)
+        si HayFlorEnLaBolsa
+          RecibirMensaje(av,r1)
+          RecibirMensaje(ca,r1)
+      sino
+        si (id=2)
+          RecibirMensaje(cant,r2)
+          si HayFlorEnLaBolsa
+            RecibirMensaje(av,r2)
+            RecibirMensaje(ca,r2)
+        sino
+          si id=3
+            RecibirMensaje(cant,r3)
+            si HayFlorEnLaBolsa
+              RecibirMensaje(av,r3)
+              RecibirMensaje(ca,r3)
+          sino
+            finalizados:= finalizados+1
+      si ((id<>0)&(HayFlorEnLaBolsa))
+        Pos(av,ca)
+        repetir cant
+          si HayFlorEnLaBolsa
+            depositarFlor
+        listo(id)
+  fin
+variables {OK}
+  r1,r2,r3:cliente
+  rs:servidor
+comenzar {OK}
+  AsignarArea(r1,a1)
+  AsignarArea(r2,a2)
+  AsignarArea(r3,a3)
+  AsignarArea(rs,a1)
+  AsignarArea(rs,a2)
+  AsignarArea(rs,a3)
+  AsignarArea(rs,as)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,1)
+  Iniciar(r3,3,1)
+  Iniciar(rs,100,100)
+fin
+

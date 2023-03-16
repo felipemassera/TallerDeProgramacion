@@ -1,0 +1,92 @@
+programa tp4-ej2
+procesos
+  proceso juntarP(ES p:numero;E ca:numero;E av:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+      si p=5  {si hay mas de 5 papeles en la misma esquina no necesito moverme}
+        depositarP(p,av,ca)
+  fin
+  proceso depositarP(ES p:numero;E ca:numero;E av:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    mientras p>0
+      depositarPapel
+      p:=p -1
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+  fin
+  proceso avanzar(ES p:numero;E av:numero;ES ca:numero)
+  comenzar
+    mientras (ca<100)
+      juntarP(p,av,ca)
+      mover
+      ca:=ca+1
+  fin
+  proceso juntar(ES p:numero;E av:numero;ES intentos:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    si HayPapelEnLaEsquina
+      intentos:=0
+      mientras HayPapelEnLaEsquina
+        tomarPapel
+        p:=p+1
+    Pos(av,1)
+    LiberarEsquina(50,50)
+  fin
+  proceso depositarBase(ES p:numero)
+  comenzar
+    mientras p>0
+      depositarPapel
+      p:=p -1
+  fin
+areas {OK}
+  a1: AreaP(5,1,5,100)
+  a2: AreaP(10,1,10,100)
+  a3: AreaP(11,1,11,1)
+  a4: AreaP(12,1,12,1)
+  ac: AreaC(50,50,50,50)
+robots
+  robot productores
+  variables
+    ca,av,p:numero
+  comenzar
+    p:=0
+    ca:=1
+    av:=PosAv
+    avanzar(p,av,ca)
+    juntarP(p,av,ca)
+  fin
+  robot consumidores
+  variables
+    av,intentos,p:numero
+  comenzar
+    intentos:=0
+    av:= PosAv
+    p:=0
+    mientras intentos<8
+      juntar(p,av,intentos)
+      depositarBase(p)
+      intentos:= intentos+1
+  fin
+variables {OK}
+  p1,p2:productores
+  c1,c2:consumidores
+comenzar  {OK}
+  AsignarArea(p1,a1)
+  AsignarArea(p2,a2)
+  AsignarArea(c1,a3)
+  AsignarArea(c2,a4)
+  AsignarArea(p1,ac)
+  AsignarArea(p2,ac)
+  AsignarArea(c1,ac)
+  AsignarArea(c2,ac)  
+  Iniciar(p1,5,1)  
+  Iniciar(p2,10,1)
+  Iniciar(c1,11,1)
+  Iniciar(c2,12,1)
+fin
+

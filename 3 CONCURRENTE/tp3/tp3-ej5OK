@@ -1,0 +1,98 @@
+programa tp3ej5
+procesos
+  proceso enviarId comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+  fin
+  proceso alaFuente(ES ok:boolean;E avo:numero;E cao:numero)
+  comenzar
+    BloquearEsquina(11,11)
+    Pos(11,11)
+    si HayPapelEnLaEsquina
+      tomarPapel
+    sino
+      ok:=F
+    {Informar('preMovida',0)}
+    Pos(avo,cao)
+    {Informar('preMovida',1)}
+    LiberarEsquina(11,11)
+    {Informar('preMovida',2)}
+  fin
+  proceso maxDistancia(E id:numero; E d:numero;ES idM:numero;ES dM:numero)
+  comenzar
+    si d>dM
+      dM:=d
+      idM:=id
+  fin
+areas
+  a1: AreaP(4,1,4,100)
+  a2: AreaP(6,1,6,100)
+  a3: AreaP(8,1,8,100)
+  a4: AreaP(10,1,10,100)
+  fuente: AreaPC(11,11,11,11)
+  ar: AreaP(1,1,1,1)
+robots
+  robot runners
+  variables
+    ok:boolean
+    id,avo,cao:numero
+  comenzar
+    ok:=V
+    avo:=PosAv
+    cao:=PosCa
+    RecibirMensaje(id,rf)
+    mientras((PosCa<100) & (ok)) 
+      alaFuente(ok,avo,cao)
+      si ok
+        depositarPapel
+        mover
+        cao:=cao+1
+    si ok
+      alaFuente(ok,avo,cao)
+      si ok
+        depositarPapel
+    EnviarMensaje(id,rf)
+    EnviarMensaje(cao,rf)
+  fin
+  robot referee
+  variables
+    id,distancia,idM,distM:numero
+  comenzar
+    distM:=-1
+    enviarId
+    repetir 4
+      RecibirMensaje(id,*)
+      si id=1
+        RecibirMensaje(distancia,r1)
+      sino
+        si id=2
+          RecibirMensaje(distancia,r2)
+        sino
+          si id=3
+            RecibirMensaje(distancia,r3)
+          sino
+            RecibirMensaje(distancia,r4)
+      maxDistancia(id,distancia,idM,distM)
+    Informar('GanadorRobot',idM)
+  fin
+variables
+  r1,r2,r3,r4: runners
+  rf:referee
+comenzar
+  AsignarArea(r1,a1)
+  AsignarArea(r2,a2)
+  AsignarArea(r3,a3)
+  AsignarArea(r4,a4)
+  AsignarArea(r1,fuente)
+  AsignarArea(r2,fuente)
+  AsignarArea(r3,fuente)
+  AsignarArea(r4,fuente)
+  AsignarArea(rf,ar)
+  Iniciar(r1,4,1)
+  Iniciar(r2,6,1)
+  Iniciar(r3,8,1)
+  Iniciar(r4,10,1)
+  Iniciar(rf,1,1)
+fin

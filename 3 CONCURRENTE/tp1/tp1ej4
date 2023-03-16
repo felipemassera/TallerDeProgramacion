@@ -1,0 +1,69 @@
+programa tp1Ej4
+procesos
+  proceso juntarP
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso juntarF
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso recorrerPar
+  comenzar
+    repetir 24
+      repetir 99
+        juntarP
+        mover
+      juntarP
+      Pos(PosAv+1,1)
+    repetir 99
+      juntarP
+      mover
+    juntarP
+  fin
+  proceso recorrerImpar
+  comenzar
+    repetir 24
+      repetir 99
+        juntarF
+        mover
+      juntarF
+      Pos(PosAv+1,1)
+    repetir 99
+      juntarF
+      mover
+    juntarF
+  fin
+
+areas
+  a1: AreaP(1,1,25,100)
+  a2: AreaP(26,1,50,100)
+  a3: AreaP(51,1,75,100)
+  a4: AreaP(76,1,100,100)
+
+robots
+  robot r2
+  comenzar
+    recorrerPar
+    Pos(76,1)
+    recorrerPar
+  fin
+  robot r1
+  comenzar
+    recorrerImpar
+    Pos(51,1)
+    recorrerImpar
+  fin
+variables
+  par: r2
+  impar:r1
+comenzar
+  AsignarArea(impar,a1)
+  AsignarArea(impar,a3)
+  AsignarArea(par,a2)
+  AsignarArea(par,a4)
+  Iniciar(impar,1,1)
+  Iniciar(par,26,1)
+fin

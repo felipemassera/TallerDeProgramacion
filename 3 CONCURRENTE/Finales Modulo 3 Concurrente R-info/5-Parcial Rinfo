@@ -1,0 +1,151 @@
+programa parcial5
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha 
+  fin
+  proceso enviarId
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)    
+    EnviarMensaje(4,r4)
+  fin
+  proceso recorridoFlor(E id:numero)
+  variables
+    avo,cao:numero
+  comenzar
+    repetir (3)
+      si HayFlorEnLaBolsa
+        depositarFlor
+      mover
+    si id=1
+      EnviarMensaje(1,r2)
+    sino
+      EnviarMensaje(3,r4)
+    si HayFlorEnLaBolsa
+      depositarFlor
+    avo:=PosAv
+    cao:=PosCa
+    BloquearEsquina(avo -1,cao)
+    mover
+    si HayFlorEnLaBolsa
+      depositarFlor
+    LiberarEsquina(avo,cao)
+  fin
+  proceso recorridoPapel(E id:numero;E avo:numero; E cao:numero)
+  comenzar
+    si HayPapelEnLaBolsa
+      depositarPapel
+    mover
+    LiberarEsquina(avo,cao)
+    repetir 11
+      si HayPapelEnLaBolsa
+        depositarPapel
+      mover
+    si HayPapelEnLaBolsa
+      depositarPapel
+    EnviarMensaje(id,rj)
+  fin
+  proceso posicionarse(ES id:numero)
+  comenzar
+    si id=1
+      izquierda
+      Pos(9,4)
+    sino
+      si id=2
+        Pos(5,4)
+      sino
+        si id=3
+          izquierda
+          Pos(15,4)
+        sino
+          Pos(11,4)
+  fin
+  proceso recolectarF(E av:numero;E ca:numero)
+  comenzar
+    BloquearEsquina(15,15)
+    Pos(15,15)
+    repetir 10
+      si HayFlorEnLaEsquina
+        tomarFlor
+    Pos(av,ca)
+    LiberarEsquina(15,15)
+  fin
+  proceso recolectarP(E av:numero;E ca:numero)
+  comenzar
+    BloquearEsquina(15,15)
+    Pos(15,15)
+    repetir 15
+      si HayPapelEnLaEsquina
+        tomarPapel
+    Pos(av,ca)
+    LiberarEsquina(15,15)
+  fin
+
+areas
+  a1: AreaP(6,4,9,4)
+  a2: AreaPC(5,4,5,16)
+  a3: AreaPC(11,4,15,4)
+  a4: AreaP(11,5,11,16)
+  depo: AreaPC(15,15,15,15)
+  ai: AreaPC(50,50,53,53)
+  aj: AreaP(1,1,1,1)
+robots
+  robot corredores
+  variables
+    id,av,ca,ok:numero
+  comenzar
+    RecibirMensaje(id,rj)
+    posicionarse(id)
+    av:= PosAv
+    ca:= PosCa
+    si ((id=1)|(id=3))
+      recolectarF(av,ca)
+      Informar('arrancoF',id)
+      recorridoFlor(id)
+    sino
+      BloquearEsquina(av,ca)
+      recolectarP(av,ca)
+      RecibirMensaje(ok,*)
+      recorridoPapel(id,av,ca)
+  fin
+  robot jefe
+  variables
+    id:numero
+  comenzar
+    enviarId
+    RecibirMensaje(id,*)
+    si id=2
+      Informar('GanadorEquipo-',1)
+    sino
+      Informar('GanadorEquipo-',2)
+    RecibirMensaje(id,*)
+  fin
+variables
+  r1,r2,r3,r4: corredores
+  rj: jefe
+comenzar
+  AsignarArea(r1,a1)  
+  AsignarArea(r1,a2)
+  AsignarArea(r1,depo)
+  AsignarArea(r2,a2)
+  AsignarArea(r2,depo)
+  AsignarArea(r3,a3)
+  AsignarArea(r3,a4)
+  AsignarArea(r3,depo)
+  AsignarArea(r4,a4)
+  AsignarArea(r4,a3)
+  AsignarArea(r4,depo)
+  AsignarArea(rj,aj)
+  AsignarArea(r1,ai)
+  AsignarArea(r2,ai)
+  AsignarArea(r3,ai)  
+  AsignarArea(r4,ai)
+  Iniciar(r1,50,50)
+  Iniciar(r2,51,51)
+  Iniciar(r3,52,52)  
+  Iniciar(r4,53,53)
+  Iniciar(rj,1,1)
+fin

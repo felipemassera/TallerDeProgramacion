@@ -1,0 +1,1 @@
+writeln('TituloARBOL',a^dato.titulo)

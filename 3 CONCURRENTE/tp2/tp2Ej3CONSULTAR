@@ -1,0 +1,78 @@
+programa tp2ej3
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso juntarP(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:=p+1
+  fin
+  proceso avenidaA(ES p:numero)
+  comenzar
+    repetir 9
+      juntarP(p)
+      mover
+    juntarP(p)
+  fin
+  proceso avenidaB(ES f:numero)
+  comenzar
+    repetir 9
+      juntarF(f)
+      mover
+    juntarF(f)
+  fin
+areas
+  av1: AreaPC(1,1,1,20)
+  av2: AreaPC(2,1,2,20)
+robots
+  robot grupoA2
+  variables
+    p,p1:numero
+  comenzar
+    p:=0
+    p1:=0
+    RecibirMensaje(p1,A1)
+    avenidaA(p)
+    Informar('CantPapeles',(p+p1))
+  fin
+  robot grupoA1
+  variables
+    p:numero
+  comenzar
+    p:=0
+    avenidaA(p)
+    EnviarMensaje(p,A2)
+  fin
+  robot grupoB
+  variables
+    f,f1:numero
+  comenzar
+    f:=0
+    f1:=0
+    si PosCa=11
+      RecibirMensaje(f1,B1)
+      avenidaB(f)
+      Informar('CantFlores',(f+f1))
+    sino
+      avenidaB(f)
+      EnviarMensaje(f,B2)
+  fin
+variables
+  A1: grupoA1
+  A2: grupoA2
+  B1,B2: grupoB
+comenzar
+  AsignarArea(A1,av1)
+  AsignarArea(A2,av1)
+  AsignarArea(B1,av2)
+  AsignarArea(B2,av2)
+  Iniciar(A1,1,1)
+  Iniciar(A2,1,11)
+  Iniciar(B1,2,1)
+  Iniciar(B2,2,11)
+fin

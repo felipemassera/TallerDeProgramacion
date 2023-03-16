@@ -1,0 +1,50 @@
+programa ejercicio1tp1
+procesos
+  proceso juntarF(ES flor: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flor:= flor+1
+  fin
+  proceso juntar(ES flor:numero; ES vacia:numero)
+  comenzar
+    si(HayFlorEnLaEsquina)
+      juntarF(flor)
+    sino
+      vacia:=vacia+1
+  fin
+  proceso dejarFlor
+  comenzar
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+  fin
+  proceso avenida (ES f:numero; ES c:numero)
+  comenzar
+    repetir 99
+      juntar(f,c)
+      mover
+    juntar(f,c)
+    dejarFlor
+  fin
+areas
+  ciudad: AreaP(1,1,1,100)
+ 
+robots
+  robot Rinfo
+  variables
+    f:numero
+    c:numero
+  comenzar
+    f:=0
+    c:=0
+    avenida(f,c)
+    Informar(f,c)
+  fin
+
+variables
+  robot1: Rinfo
+comenzar
+  AsignarArea(robot1,ciudad)
+  Iniciar(robot1,1,1)
+fin
+  

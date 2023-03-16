@@ -1,0 +1,91 @@
+programa tp3ej4
+procesos
+  proceso esquina(E avo:numero;E cao:numero)
+  variables
+    ok:boolean
+  comenzar
+    ok:=V
+    mientras ok
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      si(HayFlorEnLaEsquina)
+        tomarFlor
+        BloquearEsquina(11,11)
+        Pos(11,11)
+        LiberarEsquina(10,10)
+        depositarFlor
+        Pos(avo,cao)
+        LiberarEsquina(11,11)
+      sino
+        ok:=F
+        Pos(avo,cao)
+        LiberarEsquina(10,10)
+  fin
+  proceso identidad
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+  fin
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+areas
+  salida: AreaPC(9,9,9,12)
+  Ajefe: AreaP(1,1,1,1)
+  recolect: AreaPC(10,10,10,10)
+  todos: AreaC(11,11,11,11)
+robots
+  robot recolector
+  variables
+    id,avo,cao:numero
+  comenzar
+    avo:=PosAv
+    cao:=PosCa
+    RecibirMensaje(id,rj)
+    esquina(avo,cao)
+    EnviarMensaje(id,rj)
+  fin
+  robot jefe
+  variables
+    flor,ulti:numero
+  comenzar
+    flor:=0
+    identidad
+    repetir 4
+      RecibirMensaje(ulti,*)
+    Informar('El-ultimo-fue-el-Robot',ulti)
+    Pos(11,11)
+    juntarF(flor)
+    Informar('JunteFlores',flor)
+    Pos(1,1)
+  fin
+variables
+  r1,r2,r3,r4: recolector
+  rj: jefe
+comenzar
+  AsignarArea(r1,salida)
+  AsignarArea(r2,salida)
+  AsignarArea(r3,salida)
+  AsignarArea(r4,salida)
+  AsignarArea(r1,recolect)
+  AsignarArea(r2,recolect)
+  AsignarArea(r3,recolect)
+  AsignarArea(r4,recolect)
+  AsignarArea(r1,todos)
+  AsignarArea(r2,todos)
+  AsignarArea(r3,todos)
+  AsignarArea(r4,todos)
+  AsignarArea(rj,todos)
+  AsignarArea(rj,Ajefe)
+  Iniciar(r1,9,9)
+  Iniciar(r2,9,10)
+  Iniciar(r3,9,11)
+  Iniciar(r4,9,12)
+  Iniciar(rj,1,1)
+  
+fin

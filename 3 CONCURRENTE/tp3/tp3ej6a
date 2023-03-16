@@ -1,0 +1,228 @@
+programa tp3ej6a
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso juntarP(ES p:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso esquina(E id:numero; ES f:numero; ES p:numero)
+  comenzar
+    si id=1
+      juntarF(f)
+    sino
+      si id=3 
+        juntarP(p)
+      sino
+        juntarP(p)
+        juntarF(f)
+  fin
+  proceso Repetir(E id:numero; ES f:numero; ES p:numero; E cant:numero)
+  comenzar
+    repetir cant
+      esquina(id,f,p)
+      mover
+  fin
+  proceso saltoTop(E id:numero;ES f:numero; ES p:numero)
+  comenzar
+    esquina(id,f,p)
+    BloquearEsquina(PosAv+1,PosCa)
+    mover
+    esquina(id,f,p)
+    mover
+    LiberarEsquina(PosAv -1,PosCa)
+  fin
+  proceso saltoBajada(E id:numero;ES f:numero; ES p:numero)
+  comenzar
+    esquina(id,f,p)
+    BloquearEsquina(PosAv,PosCa -1)
+    mover
+    esquina(id,f,p)
+    mover
+    LiberarEsquina(PosAv, PosCa+1)
+  fin
+  proceso saltoSubida(E id:numero;ES f:numero; ES p:numero)
+  comenzar
+    esquina(id,f,p)
+    BloquearEsquina(PosAv,PosCa+1)
+    mover
+    esquina(id,f,p)
+    mover
+    LiberarEsquina(PosAv, PosCa -1)
+  fin
+  proceso saltoInferior(E id:numero;ES f:numero; ES p:numero)
+  comenzar
+    esquina(id,f,p)
+    BloquearEsquina(PosAv -1, PosCa)
+    mover
+    esquina(id,f,p)
+    mover
+    LiberarEsquina(PosAv +1, PosCa)
+  fin
+  proceso cSalto1(E id:numero;ES f:numero; ES p:numero; E cant:numero; ES ok:boolean)
+  comenzar
+    Repetir(id,f,p,cant)
+    esquina(id,f,p)
+    si ok
+      saltoTop(id,f,p)
+      ok:=F
+    sino
+      saltoBajada(id,f,p)
+    Repetir(id,f,p,cant)
+  fin
+  proceso recorrido3(ES f:numero; ES p:numero)
+  comenzar
+    Repetir(3,f,p,5)
+    saltoSubida(3,f,p)
+    repetir 2
+      derecha
+      Repetir(3,f,p,7)
+    derecha
+    esquina(3,f,p)
+    saltoInferior(3,f,p)
+    Repetir(3,f,p,5)
+    derecha
+  fin
+  proceso recorrido1 (ES f:numero; ES p:numero)
+  variables
+    ok:boolean
+  comenzar
+    ok:=V
+    Repetir(1,f,p,6)
+    repetir 2
+      derecha
+      cSalto1(1,f,p,2,ok)
+    derecha
+    Repetir(1,f,p,6)
+    derecha
+  fin
+  proceso recorrido2(ES f:numero; ES p:numero)
+  comenzar
+    Repetir(2,f,p,2)
+    saltoSubida(2,f,p)
+    Repetir(2,f,p,6)
+    derecha
+    Repetir(2,f,p,3)
+    saltoTop(2,f,p)
+    Repetir(2,f,p,5)
+    derecha
+    Repetir(2,f,p,5)
+    saltoBajada(2,f,p)
+    Repetir(2,f,p,3)
+    derecha
+    Repetir(2,f,p,6)
+    saltoInferior(2,f,p)
+    Repetir(2,f,p,2)
+    derecha
+  fin
+  proceso avanzarCalle(ES f:numero;ES p:numero; ES ok:boolean)
+  comenzar
+    si((f>0)|(p>0))
+      si HayPapelEnLaBolsa
+        depositarPapel
+        p:=p -1
+      si HayFlorEnLaBolsa
+        depositarFlor
+        f:=f -1
+      mover
+    sino
+      ok:=F
+  fin
+areas
+  a1: AreaPC(2,2,16,16)
+  aFin: AreaPC (1,20,100,22)
+  aRj: AreaP(1,1,1,1)
+robots  
+  robot jefe
+  variables
+    calle,pos:numero
+  comenzar
+    pos:=1
+    calle:=20
+    repetir 3
+      RecibirMensaje(pos,*) 
+      si pos=1
+        EnviarMensaje(calle,r1)
+      sino
+        si pos=2
+          EnviarMensaje(calle,r2)
+        sino
+          EnviarMensaje(calle,r3)
+      calle:=calle+1
+    
+  fin
+  robot runners1
+  variables
+    f,p,ca:numero
+    ok:boolean
+  comenzar
+    f:=0
+    p:=0
+    ok:=V
+    recorrido1(f,p)
+    EnviarMensaje(1,rj)
+    RecibirMensaje(ca,rj)
+    Pos(1,ca)
+    derecha
+    mientras (PosAv<100 & ok)
+      avanzarCalle(f,p,ok)
+  fin
+  robot runners2
+  variables
+    f,p,ca:numero
+    ok:boolean
+  comenzar
+    f:=0
+    p:=0
+    ok:=V
+    recorrido2(f,p)
+    EnviarMensaje(2,rj)
+    RecibirMensaje(ca,rj)
+    Pos(1,ca)
+    derecha
+    mientras (PosAv<100 & ok)
+      avanzarCalle(f,p,ok)
+
+  fin  
+  robot runners3
+  variables
+    f,p,ca:numero
+    ok:boolean
+  comenzar
+    f:=0
+    p:=0
+    ok:=V    
+    recorrido3(f,p)
+    EnviarMensaje(3,rj)
+    RecibirMensaje(ca,rj)
+    Pos(1,ca)
+    derecha
+    mientras (PosAv<100 & ok)
+      avanzarCalle(f,p,ok)
+
+  fin
+variables
+  r1:runners1
+  r2:runners2
+  r3:runners3
+  rj: jefe    
+comenzar
+  AsignarArea(r1,a1)
+  AsignarArea(r2,a1)
+  AsignarArea(r3,a1)
+  AsignarArea(rj,aRj)
+  AsignarArea(r1,aFin)
+  AsignarArea(r2,aFin)
+  AsignarArea(r3,aFin)
+  Iniciar(r1,2,2)
+  Iniciar(r2,5,5)
+  Iniciar(r3,9,9)
+  Iniciar(rj,1,1)
+fin
+

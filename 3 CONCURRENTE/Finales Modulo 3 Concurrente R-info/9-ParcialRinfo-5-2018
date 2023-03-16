@@ -1,0 +1,150 @@
+programa parcial2
+procesos
+  proceso juntarP
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso enviarId
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  proceso dejarP(E Avo:numero;E Cao:numero)
+  comenzar
+    BloquearEsquina(1,30)
+    Pos(1,30)
+    mientras HayPapelEnLaBolsa
+      depositarPapel
+    Pos(Avo,Cao)
+    LiberarEsquina(1,30)
+  fin
+  proceso calcularRandom
+  variables
+    Av,ca:numero
+  comenzar
+    Random(Av,1,7)
+    Random(ca,1,40)
+    EnviarMensaje(Av,r1)
+    EnviarMensaje(ca,r1)
+    Random(Av,8,14)
+    Random(ca,1,40)
+    EnviarMensaje(Av,r2)
+    EnviarMensaje(ca,r2)
+    Random(Av,15,21)
+    Random(ca,1,40)
+    EnviarMensaje(Av,r3)
+    EnviarMensaje(ca,r3)
+  fin
+  proceso ganador(E id:numero;E pasos:numero; ES idMax:numero; ES pasosMax:numero)
+  comenzar
+    si (pasos > pasosMax)
+      idMax:=id
+      pasosMax:=pasos
+  fin
+  proceso avanzar(ES pasos: numero)
+  variables
+    cantPasos:numero
+  comenzar
+    repetir 5
+      Random(cantPasos,1,10)
+      repetir cantPasos
+        si PosCa<40
+          juntarP
+          mover
+          pasos:=pasos+1
+    juntarP
+  fin
+  proceso avanzarDif(ES pasos: numero)
+  variables
+    cantPasos:numero
+  comenzar
+    repetir 5
+      Random (cantPasos,1,10)
+      repetir cantPasos
+        si PosCa<40
+          juntarP
+          si (PosCa=29)
+            BloquearEsquina(1,30)
+            mover
+            juntarP
+            mover
+            LiberarEsquina(1,30)
+            pasos:=pasos+2            
+          sino
+            mover
+            pasos:=pasos+1
+    juntarP
+  fin
+ 
+areas
+  a1: AreaPC(1,1,7,40)
+  a2: AreaP(8,1,14,40)
+  a3: AreaP(15,1,21,40)
+  aj: AreaP(25,1,25,1)
+robots
+  robot runner
+  variables
+    avi,cai,pasos,avo,cao,id:numero
+  comenzar
+    pasos:=0
+    RecibirMensaje(id,rj)
+    RecibirMensaje(avi,rj)
+    RecibirMensaje(cai,rj)
+    Pos(avi,cai)
+    si avi=1
+      si ca<>30
+        avanzarDif(pasos)
+      sino
+        BloquearEsquina(1,30)
+        mientras HayPapelEnLaEsquina
+          tomarPapel
+        mover
+        pasos:=pasos+1
+        LiberarEsquina(1,30)
+        avanzar(pasos)
+    sino
+      avanzar(pasos)
+    avo:=PosAv
+    cao:=PosCa
+    dejarP(avo,cao)
+    EnviarMensaje(id,rj)
+    EnviarMensaje(pasos,rj)
+  fin
+  robot jefe
+  variables
+    id,pasos,idMax,pasosMax:numero
+  comenzar
+    pasosMax:= -1
+    idMax:=0
+    enviarId
+    calcularRandom
+    repetir 3
+      RecibirMensaje(id,*)
+      si id=1
+        RecibirMensaje(pasos,r1)
+      sino
+        si id=2
+          RecibirMensaje(pasos,r2)
+        sino
+          RecibirMensaje(pasos,r3)
+      ganador(id,pasos,idMax,pasosMax)
+    Informar('ElGanadorEs-Robot',idMax)
+  fin
+    
+variables
+  r1,r2,r3: runner
+  rj: jefe
+comenzar
+  AsignarArea(r1,a1)
+  AsignarArea(r2,a1)
+  AsignarArea(r3,a1)
+  AsignarArea(r2,a2)
+  AsignarArea(r3,a3)
+  AsignarArea(rj,aj)
+  Iniciar(r1,1,1)
+  Iniciar(r2,8,1)
+  Iniciar(r3,15,1)
+  Iniciar(rj,25,1)
+fin

@@ -1,0 +1,81 @@
+programa tp4-ej3
+procesos
+  proceso enviarId comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+  fin
+  proceso juntarP
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso enviarOk
+  comenzar
+    si (PosAv=1)
+      EnviarMensaje(1, r2)
+      EnviarMensaje(1, r3)
+    sino
+      si (PosAv=2)
+        EnviarMensaje(1, r1)
+        EnviarMensaje(1, r3)
+      sino  
+        EnviarMensaje(1, r2)
+        EnviarMensaje(1, r1)
+  fin
+  proceso etapa 
+  comenzar
+    repetir 5
+      juntarP
+      mover
+    enviarOk
+  fin
+  proceso ultima
+  comenzar
+    repetir 4
+      juntarP
+      mover
+    enviarOk
+  fin
+areas
+  a1: AreaP(1,1, 1,100)
+  a2: AreaP(2,1, 2,100)
+  a3: AreaP(3,1, 3,100)
+  aJ: AreaP(100,100, 100,100)
+robots
+  robot recolectores
+  variables
+    ok: numero
+  comenzar
+    repetir 19
+      etapa
+      si (PosAv=1)
+        RecibirMensaje(ok, r2)
+        RecibirMensaje(ok, r3)
+      sino
+        si (PosAv=2)
+          RecibirMensaje(ok, r1)
+          RecibirMensaje(ok, r3)
+        sino 
+          RecibirMensaje(ok, r1)
+          RecibirMensaje(ok, r2)
+    ultima
+  fin
+  robot jefe
+  comenzar
+    enviarId
+  fin
+variables
+  r1, r2, r3: recolectores
+  rJ: jefe
+comenzar
+  AsignarArea(r1, a1)
+  AsignarArea(r2, a2)
+  AsignarArea(r3, a3)
+  AsignarArea(rJ, aJ)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,1)
+  Iniciar(r3, 3,1)
+  Iniciar(rJ, 100,100)
+fin
+

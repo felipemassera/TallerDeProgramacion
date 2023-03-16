@@ -1,0 +1,104 @@
+programa tp3-ej3
+procesos
+  proceso quienesSon comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+  fin
+  proceso esquina(E av:numero;E ca:numero;ES flores:numero;E Avo:numero;E Cao:numero;ES ok:boolean)
+  comenzar
+    BloquearEsquina(av,ca)
+    Pos(av,ca)      
+    si HayFlorEnLaEsquina
+      tomarFlor
+      flores:= flores+1
+    sino
+      ok:=F
+    Pos(Avo,Cao)
+    LiberarEsquina(av,ca)
+  fin
+  proceso randomDireccion
+  variables
+    ca,av:numero
+  comenzar
+    Random(av,2,10)
+    Random(ca,2,10)
+    EnviarMensaje(av,r1)
+    EnviarMensaje(av,r2)
+    EnviarMensaje(av,r3)
+    EnviarMensaje(av,r4)
+    EnviarMensaje(ca,r1)
+    EnviarMensaje(ca,r2)
+    EnviarMensaje(ca,r3)
+    EnviarMensaje(ca,r4)
+  fin
+  proceso maximo(E cant:numero;E id:numero;ES idM:numero;ES cantM:numero)
+  comenzar
+    si(cant>cantM)
+      cantM:=cant
+      idM:=id
+  fin 
+areas
+  salida: AreaPC(2,1,5,1)
+  patroncito: AreaP(1,1,1,1)
+  BsAs:AreaPC(2,2,10,10)
+robots
+  robot recolectores
+  variables
+    nro,av,ca,Cao,Avo,flores:numero
+    ok:boolean
+  comenzar
+    ok:=V
+    Avo:=PosAv
+    Cao:=PosCa 
+    flores:=0
+    RecibirMensaje(nro,rj)
+    RecibirMensaje(av,rj)
+    RecibirMensaje(ca,rj)
+    mientras ok
+      esquina(av,ca,flores,Avo,Cao,ok)
+    EnviarMensaje(nro,rj)
+    EnviarMensaje(flores,rj)
+  fin
+  robot jefe
+  variables
+    cant,id,idM,cantM:numero
+  comenzar
+    cantM:=-1
+    quienesSon
+    randomDireccion
+    repetir 4
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(cant,r1)
+      sino
+        si(id=2)
+          RecibirMensaje(cant,r2)
+        sino
+          si(id=3)
+            RecibirMensaje(cant,r3)
+          sino
+            RecibirMensaje(cant,r4)
+      maximo(cant,id,idM,cantM)
+    Informar('EL-robot-ganador-es-el',idM) 
+  fin
+variables
+  rj:jefe
+  r1,r2,r3,r4:recolectores
+comenzar
+  AsignarArea(r1,BsAs)
+  AsignarArea(r2,BsAs)
+  AsignarArea(r3,BsAs)
+  AsignarArea(r4,BsAs)
+  AsignarArea(r1,salida)
+  AsignarArea(r2,salida)
+  AsignarArea(r3,salida)
+  AsignarArea(r4,salida)
+  AsignarArea(rj,patroncito)
+  Iniciar(rj,1,1)
+  Iniciar(r1,2,1)
+  Iniciar(r2,3,1)
+  Iniciar(r3,4,1)
+  Iniciar(r4,5,1)
+fin 

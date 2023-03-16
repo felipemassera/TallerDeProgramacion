@@ -1,0 +1,164 @@
+programa ejercicio4P2
+procesos
+  proceso calcularSalto
+  variables
+    av,ca:numero
+  comenzar
+    Random(av, 25, 75)
+    Random(ca, 25, 75)
+    Pos(av,ca)
+  fin
+  proceso mandarId comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)   
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+  fin
+  proceso juntarPapeles(ES elemT: numero) comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      elemT:=elemT+1
+  fin
+  proceso juntarFlores(ES elemT: numero) comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      elemT:=elemT+1
+  fin
+  proceso limpiarEsquina(ES elemT: numero)
+  comenzar
+    juntarPapeles(elemT)
+    juntarFlores(elemT)
+  fin
+  proceso seleccionarSaltador
+  variables
+    idS: numero
+  comenzar
+    Random(idS, 1, 4)
+    si (idS = 1)
+      EnviarMensaje(V, r1)
+      EnviarMensaje(F, r2)
+      EnviarMensaje(F, r3)
+      EnviarMensaje(F, r4)
+    sino
+      si(idS= 2)
+        EnviarMensaje(V, r2)
+        EnviarMensaje(F, r1)
+        EnviarMensaje(F, r3)        
+        EnviarMensaje(F, r4)
+      sino 
+        si(idS = 3)
+          EnviarMensaje(V, r3)
+          EnviarMensaje(F, r2)
+          EnviarMensaje(F, r1)
+          EnviarMensaje(F, r4)          
+        sino
+          EnviarMensaje(V, r4)
+          EnviarMensaje(F, r1)
+          EnviarMensaje(F, r2)
+          EnviarMensaje(F, r3)
+  fin
+  proceso calcularMax(E e: numero; ES eM: numero; E id: numero; ES idM: numero)
+  comenzar
+    si(e>eM)
+      idM:=id
+      eM:=e
+  fin
+  proceso enviarGanador(E idS:numero)
+  comenzar
+    si (idS=1)
+      EnviarMensaje(44,r1)
+      EnviarMensaje(0,r2)
+      EnviarMensaje(0,r3)
+      EnviarMensaje(0,r4)
+    sino
+      si(idS=2)
+        EnviarMensaje(44,r2)
+        EnviarMensaje(0,r1)
+        EnviarMensaje(0,r3)        
+        EnviarMensaje(0,r4)
+      sino 
+        si(idS=3)
+          EnviarMensaje(44,r3)
+          EnviarMensaje(0,r2)
+          EnviarMensaje(0,r1)
+          EnviarMensaje(0,r4)          
+        sino
+          EnviarMensaje(44,r4)
+          EnviarMensaje(0,r1)
+          EnviarMensaje(0,r2)
+          EnviarMensaje(0,r3)
+  fin   
+areas
+  cuadrante: AreaPC(25,25,75,75)
+  areaRJ: AreaP(1,1,1,1)
+  areaRL: AreaPC(25,1,40,1)
+robots
+  robot jefe
+  variables
+    terminoS:boolean
+    e,idR,eM,idM,t:numero
+  comenzar
+    t:=0
+    eM:=-1
+    repetir 10
+      seleccionarSaltador
+      RecibirMensaje(terminoS,*)
+    mandarId
+    repetir 4
+      RecibirMensaje(idR,*)
+      si(idR=1)
+        RecibirMensaje(e,r1)
+      sino
+        si(idR=2)
+          RecibirMensaje(e,r2)
+        sino
+          si(idR=3)
+            RecibirMensaje(e,r3)
+          sino
+            RecibirMensaje(e,r4)
+      calcularMax(e,eM,idR,idM)
+    enviarGanador(idM)
+  fin
+   
+  robot limpiador
+  variables
+    elemT,avI,caI,id,gane:numero
+    puedoS:boolean
+  comenzar
+    avI:=PosAv
+    caI:=PosCa
+    elemT:=0
+    repetir 10
+      RecibirMensaje(puedoS,rJ)
+      si puedoS
+        calcularSalto
+        limpiarEsquina(elemT)
+        Pos(avI,caI)
+        EnviarMensaje(V,rJ)
+    RecibirMensaje(id,rJ)
+    EnviarMensaje(id,rJ)
+    EnviarMensaje(elemT,rJ)
+    RecibirMensaje(gane,rJ)
+    si(gane=44)
+      Informar('GANADOR_ROBOT',id)
+      Pos(50,50)
+  fin
+variables
+  r1, r2, r3, r4: limpiador
+  rJ: jefe
+comenzar
+  AsignarArea(rJ, areaRJ)
+  AsignarArea(r1, cuadrante) 
+  AsignarArea(r1, areaRL)
+  AsignarArea(r2, areaRL)
+  AsignarArea(r2, cuadrante) 
+  AsignarArea(r3, areaRL)
+  AsignarArea(r3, cuadrante)  
+  AsignarArea(r4, areaRL)
+  AsignarArea(r4, cuadrante)
+  Iniciar(rJ, 1,1)  
+  Iniciar(r1, 25,1)  
+  Iniciar(r2, 30,1)  
+  Iniciar(r3, 35,1)    
+  Iniciar(r4, 40,1)
+fin  

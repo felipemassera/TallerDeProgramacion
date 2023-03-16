@@ -1,0 +1,65 @@
+programa tp3-pdfclase1
+procesos
+  proceso juntarF comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso dejarF comenzar
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+  fin
+  proceso ele(E alto:numero) comenzar
+    repetir alto
+      juntarF
+      mover
+    derecha
+    repetir 15
+      juntarF
+      mover
+    derecha
+  fin
+  proceso cuadrado(E alto:numero) comenzar
+    repetir 2
+      ele(alto)
+  fin
+areas
+  areaJ: AreaP(1,1,1,1)
+  area1: AreaPC(15,15,60,60)
+  areaC: AreaC(10,10,10,10)
+robots
+  robot tipo1
+  variables
+    Cao,Avo,posicion,alto:numero
+  comenzar
+    Cao:=PosCa
+    Avo:=PosAv
+    RecibirMensaje(alto,rj)
+    RecibirMensaje(posicion,rj)
+    Pos(posicion,Cao)
+    cuadrado(alto)
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    dejarF
+    Pos(Avo,Cao)
+    LiberarEsquina(10,10)
+  fin
+  robot jefe
+  comenzar
+    EnviarMensaje(13,r1)
+    EnviarMensaje(17,r1)
+    EnviarMensaje(10,r2)
+    EnviarMensaje(22,r2)
+  fin
+variables
+  r2,r1:tipo1
+  rj:jefe
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r1,areaC)
+  AsignarArea(r2,area1)
+  AsignarArea(r2,areaC)
+  AsignarArea(rj,areaJ)
+  Iniciar(rj,1,1)
+  Iniciar(r1,15,15)
+  Iniciar(r2,40,40)
+fin

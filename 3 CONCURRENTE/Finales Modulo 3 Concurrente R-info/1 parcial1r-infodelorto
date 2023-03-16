@@ -1,0 +1,124 @@
+{Dos robots recolectores deben recolectar todas las flores de una calle asignada. Una vez que juntan}
+{todas las flores las deben depositar de a una en la esquina 鈥渄ep贸sito鈥?.}
+{Un robot fiscal deber谩:}
+{- determinar al azar la esquina 鈥渄ep贸sito鈥? dentro de un 谩rea determinada. La esquina}
+{鈥渄ep贸sito鈥? es la misma para ambos robots.}
+{- determinar qu茅 robot recolector fue el que menos flores recolect贸.}
+{La calle para el recolector 1 es la 5 y para el recolector 2 es la 6 (ambas calles desde la avenida 10}
+{hasta la avenida 20).}
+{El 谩rea donde se debe elegir la esquina dep贸sito est谩 comprendida entre las esquinas (10,10) y}
+{(20,20); El 谩rea de comienzo de los robots es: Fiscal en (1,1), recolector 1 en (2,2) y recolector 2 en (3,3}
+
+programa FINAL1 
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso minimo(E id:numero;ES idMin:numero; E cant:numero;ES cantMin:numero)
+  comenzar
+    si cant<cantMin
+      cantMin:=cant
+      idMin:=id
+  fin
+  proceso calcDepo
+  variables
+    av, ca:numero
+  comenzar
+    Random(av,10,20)
+    Random(ca,10,20)
+    enviarCoorDepo(av, ca)
+  fin
+  proceso enviarCoorDepo(E av:numero;E ca:numero)
+  comenzar
+    EnviarMensaje(av,r1)
+    EnviarMensaje(ca,r1)
+    EnviarMensaje(av,r2)
+    EnviarMensaje(ca,r2)
+  fin
+  proceso enviarId
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+  fin
+  proceso recorrer(ES f:numero)
+  comenzar
+    mientras(PosAv < 20)
+      juntarF(f)
+      mover
+    juntarF(f)
+  fin
+areas
+  a1a: AreaP(2,2,2,2)
+  a2a: AreaP(3,3,3,3)
+  ad: AreaPC(10,10,20,20)
+  a1: AreaP (10,5,20,5)
+  a2: AreaP (10,6,20,6)
+  aN: AreaP(1,1,1,1)
+
+robots
+  robot nisman {fiscalete}
+  variables
+    f,idMin,fMin, id:numero
+  comenzar
+    idMin:=0
+    fMin:=999
+    enviarId
+    calcDepo
+    repetir 2
+      RecibirMensaje(id,*)
+      si id=1
+        RecibirMensaje(f,r1)
+      sino
+        RecibirMensaje(f,r2)
+      minimo(id,idMin,f,fMin)
+    Informar('ID-MIN',idMin)
+    Informar('menos-flores',fMin)
+  fin
+
+  robot recolector
+  variables
+    f,id:numero
+    avd,cad:numero
+    avi,cai:numero
+  comenzar
+    f:=0
+    avi:=PosAv
+    cai:=PosCa
+    RecibirMensaje(id,rn)
+    si(id = 1)
+      Pos(10, 5)
+    sino
+      Pos(10, 6)
+    RecibirMensaje(avd, rn)
+    RecibirMensaje(cad, rn)
+    derecha
+    recorrer(f)
+    BloquearEsquina(avd, cad)
+    Pos(avd, cad)
+    repetir f 
+      depositarFlor
+    Pos(avi, cai)
+    LiberarEsquina(avd,cad)
+    EnviarMensaje(id,rn)
+    EnviarMensaje(f,rn)
+  fin
+
+variables
+  r1,r2: recolector
+  rn: nisman
+comenzar
+  AsignarArea(r1, a1)
+  AsignarArea(r2, a2)
+  AsignarArea(r1, a1a)
+  AsignarArea(r2, a2a)
+  AsignarArea(r1, ad)
+  AsignarArea(r2, ad)
+  AsignarArea(rn, aN)
+  Iniciar(rn,1,1)
+  Iniciar(r1,2,2)
+  Iniciar(r2,3,3)
+fin
+
